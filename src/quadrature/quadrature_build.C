@@ -161,10 +161,7 @@ AutoPtr<QBase> QBase::build(const QuadratureType _qt,
       return AutoPtr<QBase>(new QMonomial(_dim, _order));
 
     case QGAUSS_LOBATTO:
-      {
-        AutoPtr<QBase> ap(new QGaussLobatto(_dim, _order));
-        return ap;
-      }
+      return AutoPtr<QBase>(new QGaussLobatto(_dim, _order));
 
     default:
       libmesh_error_msg("ERROR: Bad qt=" << _qt);
