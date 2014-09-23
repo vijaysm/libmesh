@@ -1449,7 +1449,7 @@ Real System::calculate_norm(const NumericVector<Number>& v,
     }
 
   // Localize the potentially parallel vector
-  AutoPtr<NumericVector<Number> > local_v = NumericVector<Number>::build(this->comm());
+  UniquePtr<NumericVector<Number> > local_v = NumericVector<Number>::build(this->comm());
   local_v->init(v.size(), true, SERIAL);
   v.localize (*local_v, _dof_map->get_send_list());
 
@@ -1496,9 +1496,9 @@ Real System::calculate_norm(const NumericVector<Number>& v,
         libmesh_not_implemented();
 
       const FEType& fe_type = this->get_dof_map().variable_type(var);
-      AutoPtr<QBase> qrule =
+      UniquePtr<QBase> qrule =
         fe_type.default_quadrature_rule (dim);
-      AutoPtr<FEBase> fe
+      UniquePtr<FEBase> fe
         (FEBase::build(dim, fe_type));
       fe->attach_quadrature_rule (qrule.get());
 
@@ -1983,7 +1983,7 @@ Number System::point_value(unsigned int var, const Point &p, const bool insist_o
   const MeshBase &mesh = this->get_mesh();
 
   // Use an existing PointLocator or create a new one
-  AutoPtr<PointLocatorBase> locator_ptr = mesh.sub_point_locator();
+  UniquePtr<PointLocatorBase> locator_ptr = mesh.sub_point_locator();
   PointLocatorBase& locator = *locator_ptr;
 
   if (!insist_on_success)
@@ -2039,7 +2039,7 @@ Number System::point_value(unsigned int var, const Point &p, const Elem &e) cons
   FEType fe_type = dof_map.variable_type(var);
 
   // Build a FE so we can calculate u(p)
-  AutoPtr<FEBase> fe (FEBase::build(e.dim(), fe_type));
+  UniquePtr<FEBase> fe (FEBase::build(e.dim(), fe_type));
 
   // Map the physical co-ordinates to the master co-ordinates using the inverse_map from fe_interface.h
   // Build a vector of point co-ordinates to send to reinit
@@ -2080,7 +2080,7 @@ Gradient System::point_gradient(unsigned int var, const Point &p, const bool ins
   const MeshBase &mesh = this->get_mesh();
 
   // Use an existing PointLocator or create a new one
-  AutoPtr<PointLocatorBase> locator_ptr = mesh.sub_point_locator();
+  UniquePtr<PointLocatorBase> locator_ptr = mesh.sub_point_locator();
   PointLocatorBase& locator = *locator_ptr;
 
   if (!insist_on_success)
@@ -2137,7 +2137,7 @@ Gradient System::point_gradient(unsigned int var, const Point &p, const Elem &e)
   FEType fe_type = dof_map.variable_type(var);
 
   // Build a FE again so we can calculate u(p)
-  AutoPtr<FEBase> fe (FEBase::build(e.dim(), fe_type));
+  UniquePtr<FEBase> fe (FEBase::build(e.dim(), fe_type));
 
   // Map the physical co-ordinates to the master co-ordinates using the inverse_map from fe_interface.h
   // Build a vector of point co-ordinates to send to reinit
@@ -2179,7 +2179,7 @@ Tensor System::point_hessian(unsigned int var, const Point &p, const bool insist
   const MeshBase &mesh = this->get_mesh();
 
   // Use an existing PointLocator or create a new one
-  AutoPtr<PointLocatorBase> locator_ptr = mesh.sub_point_locator();
+  UniquePtr<PointLocatorBase> locator_ptr = mesh.sub_point_locator();
   PointLocatorBase& locator = *locator_ptr;
 
   if (!insist_on_success)
@@ -2235,7 +2235,7 @@ Tensor System::point_hessian(unsigned int var, const Point &p, const Elem &e) co
   FEType fe_type = dof_map.variable_type(var);
 
   // Build a FE again so we can calculate u(p)
-  AutoPtr<FEBase> fe (FEBase::build(e.dim(), fe_type));
+  UniquePtr<FEBase> fe (FEBase::build(e.dim(), fe_type));
 
   // Map the physical co-ordinates to the master co-ordinates using the inverse_map from fe_interface.h
   // Build a vector of point co-ordinates to send to reinit

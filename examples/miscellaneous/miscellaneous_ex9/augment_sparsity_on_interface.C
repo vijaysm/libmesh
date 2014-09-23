@@ -48,7 +48,7 @@ void AugmentSparsityOnInterface::augment_sparsity_pattern (SparsityPattern::Grap
             {
               if( mesh.boundary_info->has_boundary_id (elem,side, _crack_boundary_lower) )
                 {
-                  AutoPtr<Elem> side_elem = elem->build_side(side);
+                  UniquePtr<Elem> side_elem = elem->build_side(side);
 
                   lower_centroids[std::make_pair(elem->id(), side)] = side_elem->centroid();
                 }
@@ -61,7 +61,7 @@ void AugmentSparsityOnInterface::augment_sparsity_pattern (SparsityPattern::Grap
             {
               if( mesh.boundary_info->has_boundary_id (elem,side, _crack_boundary_upper) )
                 {
-                  AutoPtr<Elem> side_elem = elem->build_side(side);
+                  UniquePtr<Elem> side_elem = elem->build_side(side);
 
                   upper_centroids[std::make_pair(elem->id(), side)] = side_elem->centroid();
                 }
